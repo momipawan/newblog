@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Puppet Install Hiera and Configuring Hiera</title>
+    <meta name="description" content="Hiera allows you to create a hierachy of node information. Hiera only needs to be installed on your Puppet Master nodes"/>
+    <meta name="keywords" content="Puppet Install Hiera | Puppet Configure Hiera | How to use Puppet Hiera"/>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta name="google-site-verification" content="JcjHi7qe6nWxxbLnkN--gqmGOFaX-Y_JYmzvD2HXy9o" />
+    <meta name="author" content="Pawan Singh">
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Logo and responsive toggle -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="coding-tutorial">
+              <span class="glyphicon glyphicon-fire"></span> 
+              Code Learn
+            </a>
+        </div>
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="coding-tutorial">Home</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+      <!-- <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="about-us">
+          <li><a href="#">Engage</a></li>
+          <li><a href="#">Pontificate</a></li>
+          <li><a href="#">Synergize</a></li>
+        </ul> -->
+      <!-- </li> -->
+            </ul>
+
+    <!-- Search -->
+    <!-- <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form> -->
+
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+        <div class="start-page">
+        <a href="#" class="previous">&laquo; Previous</a>
+        <a href="puppet-using-hiera-include" class="next">Next &raquo;</a>
+        </div>
+        <!-- <a href="#" class="previous round">&#8249;</a>
+        <a href="#" class="next round">&#8250;</a> -->
+
+      <h2 class="page-header">Puppet Install Hiera and Configuring</h2>
+      <hr>
+
+    <p>Hiera allows you to create a hierachy of node information . Uisng Hiera, you can separate your variables and data from your modules.
+       You start by defining what that hierachy will be, by ordering lookups in the main Configuration file, <i>hiera.yaml.</i> The hierachy
+       is based on facts. Any fact can be used, even your own custom facts may be used. The values of the facts are then used as values for 
+       the <i>YAML</i> files stored in a directory, usually called <i>hieradata</i>. More information on Hiera can be found on the puppet
+       Labs website at <i>http://docs.puppetlabs.com/hiera/latest.</i>
+    </p>
+    <br>
+    <h2 class="page-header">Puppet Configuring Hiera</h2>
+    <p>Hiera only needs to be installed on your Puppet Master nodes. Using the Puppet Labs repo, Hiera is installed by the <i>puppet-agent</i>
+       package. Our installation pulled down <i>puppet-agent-1.2.2-1.e17.x86_64,</i> which installs Hiera version 3.0.1, as shown here:<br>
+       <br>
+       <i>hiera --version</i>
+       <br>
+       <i>3.0.1</i>
+    </p>
+    <br>
+    <p>Hiera tool would expect the Hiera Configuration file, <i>hiera.yaml,</i>in <i>/etc/hiera.yaml</i>. The previous versions of Puppet would
+       expect the Configuration file in <i>/etc/puppet/hiera.yaml or /etc/puppetlabs/puppet/hiera.yaml</i>, depending on the version of Puppet. 
+       This caused some confusion, as the  command-line utility will, by default, search in a different file than Puppet. This problem has been corrected.
+       in Puppet4; The Hiera Configuration file is now located in the <i>/etc/puppetlabs/code</i> directory. The default location for the <i>hieradata</i>
+       directory includes the value of the current environment and is located at <i>/etc/puppetlabs/code/environment/%{environment}/hieradata</i>.
+       
+       <br><br>
+       
+       Now, we can create a simple <i>hiera.yaml</i> in <i>/etc/puppet/hiera.yaml</i> to show how the hierachy is applied to a node, as shown here:
+    </p>
+      
+        <pre class="explanation"> 
+          - - -
+          :hierachy:
+             -  "hosts/%{::hostname}"
+             -  "roles/%{::role}"
+             -  "%{::kernel}/%{::os.family}/%{:os.release.major}"
+             -  "is_virtual/%{::is_virtual}"
+             -  common
+          :backends:
+             - yaml
+          :yaml:
+              :datadir:
+        </pre>
+      
+      <br>
+      
+      <p>This hierachy is quite basic. Hiera will look for a variable starting with the hostname of the node in the host's directory
+          and then move to the top scope variable role in the directory roles. if a value is not found in the roles, it will look in 
+          the  <i>/etc/puppet/hieradata/kernel/osfamily/</i> directory and <i>osfamily</i> will be replaced with the Factor values for 
+          these two facts. for a file named <i>lsbmajdistrelease.yaml</i>. On my test node, this would be <i>/etc/puppet/hieradata/Linux
+          Redhat/6.yaml</i> If the value is not found there, then Hiera will continue to look in <i>hieradata/is_virtual/true.yaml</i> 
+          if the value is still not found, then the default file <i>common.yamnl</i> will be tried. if the value is not found in common
+          , then the command-line utility will return <i>nil.</i>
+
+          <br><br>
+
+          Now to use Hiera in our manifests, we can use the <i>hiera</i> function inline or set a variable using Hiera. When using Hiera
+          , the syntax is <i>hiera ( 'variable', 'default')</i>. The <i>variable</i> value is the key you are interested in looking at; the
+          <i>default</i> value is the value to use when nothing is found in the hierachy. Create a <i>syslog</i> module in <i>/etc/puppet/
+          modules/syslog/manifest/init.pp</i> that starts syslog and makes sure the correct syslog is installed, as shown here.
+
+      </p>
+
+      <pre class="explanation"> 
+          class syslog {
+              $syslogpkg = hiera('syslogpkg', 'syslog')
+              package  { "$syslogpkg":
+                 ensure => 'installed',
+              }
+
+              service { "$syslogpkg":
+                 ensure => true,
+                 enable => true,
+            }
+          }
+          </pre>
+        <br>
+       <p>Then create an empty <i>/etc/puppet/manifests/site.pp</i> file that includes syslog, as shown here:</p>
+       
+          <pre class="explanation"> 
+                node default {
+                    include syslog
+                }
+                </pre>
+        <p> In this code, we set our <i>default</i> node to include the <i>syslog</i> module and then we define the <i>syslog</i>
+            module. The <i>syslog</i> module looks for the Hiera variable <i>syslog</i> to know which <i>syslog</i> package to install.
+
+        </p>
+      <div style="height: 100px"></div>
+      <hr>
+      <div class="small-print">
+        <div class="container">
+         <center><p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p></center>
+          <center><p>Copyright &copy; Code-Learn.com 2019 </p></center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--- Bootstrap Link------------------------------------------------------------------------------------->
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="js/animation.js"></script> -->
+
+   <!-- jQuery -->
+   <script src="js/jquery-1.11.3.min.js"></script>
+
+   <!-- Bootstrap Core JavaScript -->
+   <script src="js/bootstrap.min.js"></script>
+ 
+ <!-- IE10 viewport bug workaround -->
+ <script src="js/ie10-viewport-bug-workaround.js"></script>
+ 
+ <!-- Placeholder Images -->
+ <script src="js/holder.min.js"></script>
+
+<!--- END ------------------------------------------------------------------------------------------------>
+</body>
+</html>

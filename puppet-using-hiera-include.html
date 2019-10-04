@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Create and Assign Ruby Variables</title>
-    <meta name="description" content="Ruby Lets you create a Variables names that refer to values. You don't have to declare variables in Ruby Just assign variable with = symbol."/>
-    <meta name="keywords" content="How to create variables | How to declare  variables | Ruby class variable | Ruby instance variable | ruby local variable | ">
+    <title>Using hiera_include in Puppet</title>
+    <meta name="description" content="Hiera allows you to create a hierachy of node information. Hiera only needs to be installed on your Puppet Master nodes"/>
+    <meta name="keywords" content="Puppet Install Hiera | Puppet Configure Hiera | How to use Puppet Hiera"/>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <meta name="google-site-verification" content="JcjHi7qe6nWxxbLnkN--gqmGOFaX-Y_JYmzvD2HXy9o" />
@@ -90,80 +90,70 @@
     <div class="row">
         <div class="col-lg-12">
         <div class="start-page">
-        <a href="ruby-arithmetic-operators" class="previous">&laquo; Previous</a>
-        <a href="ruby-calling-method-object" class="next">Next &raquo;</a>
+        <a href="#" class="previous">&laquo; Previous</a>
+        <a href="#" class="next">Next &raquo;</a>
         </div>
         <!-- <a href="#" class="previous round">&#8249;</a>
         <a href="#" class="next round">&#8250;</a> -->
 
-      <h2 class="page-header">Create and Assign Ruby Variables</h2>
+      <h2 class="page-header">Using hiera_include in Puppet</h2>
       <hr>
-
-    <p>You don't have to declare variables in Ruby; assigning to them creates them. You assign to a variable with the = symbol</p>
-        <pre class="explanation"> 
-          if you type              irb displays
-          <br>
-          small         =   8            =>  8
-          <br>
-          medium     =   12         =>  12
-          <br>
-        </pre>
-
-     <br>
-    <p>A variable name starts with a lowercase letter, and can contain letters, numbers, and underscores.</p>
-
-    <pre class="explanation"> 
-        if you type                 irb displays
-        <br>
-        # 8  is assigned to small  varibale
-        # 12 is assigned to medium variable
-        <br>
-        small     +      medium       =>  20
-        <br>
-      </pre>
-    
-       <br>
-      <p>Variables don't have types in Ruby, they can hold any value you want. You can assign a string to a
-          variable, then immediately assign a floating-point numbers to the same variable, and its perfect
-          legal.
-      </p>
-      
-      <pre class="explanation"> 
-        if you type               irb displays
-    
-        pie       =   "Lemon"   =>  "Lemon"
-
-        pie       =    3.14         =>   3.14
-        <br>
-      </pre>
-
-       <br>
-    <p>The += operator lets you add on to the existing value of a variable</p>
-    <pre class="explanation"> 
-      if you type                  irb displays
-      <br>
-      number   =    3               3  
-      <br>
-      number   +-   1               4
-      <br>
-      string   =   "ab"            "ab"
-      <br>
-      string   +=   "cd"          "abcd"
-    </pre>
-      <br>
-      <h2 class="page-header">Use of Strings in Ruby</h2>
-      <p>A string is a series of text characters. You can use things to hold names, email addresses, phone
-        numbers, and a million things . Ruby's strings are special because even very large strings are highly
-        efficient to work with. 
-        The easier way to specify a string is to surround is either with double quotos (") or single quotos
-        ('). 
+    <br>
+    <p>To use <i>hiera_include</i>, we set a Hiera variable to hold the name of the classes we would like to apply to the nodes
+       . By convention, this is called  <i>classes</i>, but it could be anything. We'll also set a variable <i>role</i> that
+        we will use in our new base class. We modify  <i>site.pp</i> to include all the classes defined in the Hiera variable classes
+        . We also set a default value if no values are found; this way we can guarantee that the catalogs will compile and all the
+        nodes receive at least the base class. Edit  <i>/etc/puppetlabs/code/environment/production/manifest/site.pp</i>, as follows:
     </p>
-        <pre class="explanation"> 
-          "hello"
-          <br>
-          'world'
-        </pre>
+    <br>
       
+        <pre class="explanation"> 
+            node default  {
+                hiera_include {'classes', 'base'}
+            }
+        </pre>
+       <br>
+     <p>For the base class, we will just set the <i>motd</i> file, as we've done previously. We'll also set a welcome string in Hiera
+        . In <i>common.yaml</i>, we'll set this to something generic and override the value in a hostname-specific YAML file. Edit the base class in <i>/etc/puppetlabs/code/environments/production/
+        modules/base/manifests/init.pp, </i>as follows:
+    </p>
+    <br>
+    <pre class="explanation"> 
+            class base  {
+                $welcome = hiera ('welcome', 'welcome')
+                file {'/etc/motd':
+                  mode  => '0644',
+                  owner =>  '0',
+                  group =>  '0',
+                  content => inline_template ("<%=  @welcome %>"),
+              }
+            }
+        </pre>
+        <br>
+        <p>This is our base class; it uses an inline template to set up the <i>message of the day</i>file <i>(/etc/motd)</i>.
+           We then need to set the welcome information in  <i>hieradata;</i> edit <i>/etc/puppet/hieradata/common.yaml</i> to include
+           the default welcome message, as shown here: </p>
+          <br>
+           <pre class="explanation"> 
+            - - --
+            welcome: 'welcome to Code-Learn'
+            classes:
+              - 'base'
+            syslogpkg: 'nothing'
+            </pre>
+          <br>
+         <p>Now we can run Puppet on our <i>node1</i> machine. After the successful run, our <i>/etc/motd</i> file has the following content:</p>
+
+        <br>
+         <pre class="explanation"> 
+             Welcome to Example.com
+             Managed Node: client
+             Managed by Puppet  version  4.2.1
+        </pre>
+
+
+
+
       <div style="height: 100px"></div>
       <hr>
       <div class="small-print">
