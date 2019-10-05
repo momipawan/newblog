@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Building a Puppet Master and Signing Certificates</title>
+    <meta name="description" content="To build a Puppet master configuration and sign a certificate,  we will first start with an empty machine running an enterprise Linux such as Centos and RedHat"/>
+    <meta name="keywords" content="How to install puppet master | puppet master install | puppet signing certificates ">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta name="google-site-verification" content="JcjHi7qe6nWxxbLnkN--gqmGOFaX-Y_JYmzvD2HXy9o" />
+    <meta name="author" content="Pawan Singh">
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Logo and responsive toggle -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="coding-tutorial">
+              <span class="glyphicon glyphicon-fire"></span> 
+              Code Learn
+            </a>
+        </div>
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="coding-tutorial">Home</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+      <!-- <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="about-us">
+          <li><a href="#">Engage</a></li>
+          <li><a href="#">Pontificate</a></li>
+          <li><a href="#">Synergize</a></li>
+        </ul> -->
+      <!-- </li> -->
+            </ul>
+
+    <!-- Search -->
+    <!-- <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form> -->
+
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+<!-- Page Content -->
+
+<div class="container">
+<div class="row">
+    <div class="col-lg-12">
+       <div class="start-page">
+        <a href="coding-tutorial" class="previous">&laquo; Previous</a>
+        <a href="puppet-hiera" class="next">Next &raquo;</a>
+        <div>
+        <!-- <a href="#" class="previous round">&#8249;</a>
+        <a href="#" class="next round">&#8250;</a> -->
+      <h2 class="page-header">Set up a Puppet Master - Signing Certificates</h2>
+      <hr>
+
+    <p>To build a Puppet Master configuration, we will first start with an empty machine running an enterprise Linux distribution, such as CentOS, RedHat.
+        <br><br>
+        To enable the <i>puppetserver Service</i> on a node, install the Puppet Labs yum repository rpm onto the machine.
+        <br><br>
+        The lastest release rpm is  <i>puppetlabs-release-pcl-0.9.2-1.el7.noarch.rpm</i>
+        <br><br>
+        It is available from Puppet Labs at <i>http://yum.puppetlabs.com/el/7/PCL/x86_64/puppetlabs-release-pcl-0.9.2-1el7.noarch.rpm</i>
+        <br><br>
+        This is to be installed using the following commands
+    </p>
+        <pre class="explanation"> 
+        sudo yum install http://yum.puppetlabs.com/el/7/PCL/x86_64/puppetlabs-release-pcl-0.9.2-1.el7.noarch.rpm
+
+        puppetlabs-release-pcl-0.9.2-1.el7.noarch.rpm
+        00:00:00                     |  4.1 kb
+        . . . .
+
+
+        installed:
+        puppetlabs-release-pcl.noarch  0:0.9.2-1.el7
+
+
+        Complete!
+        </pre>
+
+      <br><br>
+
+      <p> After installing the <i>puppetlabs-release-pcl</i>rpm, install the <i>puppetserver</i> rpm.This can be done with the following command:</p>
+      <pre class="explanation"> 
+       sudo yum install puppetserver
+        </pre>
+
+        <p>Installing <i>puppetserver</i> will automatically install a few Java dependencies. Installing <i>puppetserver</i> will also 
+           install the <i>puppet-agent</i> rpm onto your system. This places the Puppet and Facter applications into <i>/opt/puppetlabs/bin.</i>
+        </p>
+           <br><br>
+           <h2 class="page-header">Generate Puppet Certificates</h2>
+         <p> Now, We will generate new certificates for our Puppet infrastructure.
+             <br>
+             To generate certificates, we need to use the following commands.
+        <pre class="explanation"> 
+        sudo /opt/puppetlabs/bin/puppet cert list -a
+
+        NOTICE:  Signed certificate request for ca
+        </pre>
+
+        <br>
+        <p>
+        We can now create a new certificate for the master. When nodes connect to the Puppet, they will search for a machine named <i>puppet</i>
+        This is done by adding the following to the <i>puppet.conf</i> file in either the <i>[main] or [master]</i> sections. The file is located
+        in <i>/etc/puppetlabs/puppet/puppet.conf</i>:
+         </p>
+
+         <pre class="explanation"> 
+           certname  =  puppet.code-learn.com
+            </pre>
+
+
+            <br>
+
+            <p>The domain of my test machine is <i>code-learn.com</i> and I will generate the certificate for lb with the <i>code-learn.com</i>
+               domain defined. To generate a new  certificate, we will use the <i>puppet  certificate  generate</i> subcommand, as shown here.
+
+               <pre class="explanation"> 
+        sudo /opt/puppetlabs/bin/puppet certificate generate /
+        --dns-alt-names puppet,pupept.code-learn.com, /
+        puppet.dev.code-learn.com  --ca-location local /
+
+
+        Notice: puppet.code-learn.com has a waiting certificate request
+        </pre>
+
+        <br>
+
+        <p>Now, Since the certificate has been generated, we need to sign the certificate, as shown here.</p>
+
+        <pre class="explanation"> 
+        sudo /opt/puppetlabs/bin/puppet cert sign puppet.code-learn.com /
+        --allow-dns-alt-names /
+
+        Notice: Signed certificate request for code-learn.com
+
+        Notice: Removing file Puppet::SSL::CertificateRequestPuppet.code-learn.com
+        </pre>
+
+        <p>To signed certificat will be placed into the <i>/etc/puppetlabs/pupept/ssl/ca/signed</i>directory; we need to place the certificate
+        in the <i>/etc/puppetlabs/puppet/ssl/certs </i> directory. This can be done with the <i>puppet certificate find <command></i>as shown here.
+
+        <pre class="explanation"> 
+        sudo puppet certificate find puppet.code-learn.com --ca-location local
+
+        ---------BEGIN  CERTIFICATE---------
+
+        MIBBVKJHNLNVCVBNHVHFDBVJHVBHBKBKHKHKHJHKHGHGHVCGC
+
+        ...
+        DNSVNDSBVDSBVDVNBSVBFDBFBKFBKDSBNFKKDFNKDBFKDBFFSK
+
+        ---------END    CERTIFICATE----------
+        </pre>
+
+        </p>
+         
+            </p>
+    
+      <br>
+    </div>
+  </div>
+</div>
+</div>
+      
+      <div style="height: 100px"></div>
+      <hr>
+      <div class="small-print">
+        <div class="container">
+         <center><p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p></center>
+          <center><p>Copyright &copy; Code-Learn.com 2019 </p></center>
+        </div>
+      </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+<!--- Bootstrap Link------------------------------------------------------------------------------------->
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="js/animation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>
+
+<!--- END ------------------------------------------------------------------------------------------------>
+</body>
+</html>

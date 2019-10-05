@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Using hiera_include in Puppet</title>
-    <meta name="description" content="Hiera allows you to create a hierachy of node information. Hiera only needs to be installed on your Puppet Master nodes"/>
-    <meta name="keywords" content="Puppet Install Hiera | Puppet Configure Hiera | How to use Puppet Hiera"/>
+    <title>Puppet Roles and Profiles</title>
+    <meta name="description" content="In this tutorials we will talk about how to use puppet roles and profiles and the uses of it"/>
+    <meta name="keywords" content="Puppet roles | puppet profiles"/>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <meta name="google-site-verification" content="JcjHi7qe6nWxxbLnkN--gqmGOFaX-Y_JYmzvD2HXy9o" />
@@ -90,70 +90,74 @@
     <div class="row">
         <div class="col-lg-12">
         <div class="start-page">
-        <a href="puppet-hiera" class="previous">&laquo; Previous</a>
-        <a href="puppet-roles-profiles" class="next">Next &raquo;</a>
+        <a href="puppet-using-hiera-include" class="previous">&laquo; Previous</a>
+        <a href="" class="next">Next &raquo;</a>
         </div>
         <!-- <a href="#" class="previous round">&#8249;</a>
         <a href="#" class="next round">&#8250;</a> -->
 
-      <h2 class="page-header">Using hiera_include in Puppet</h2>
+      <h2 class="page-header">Puppet Roles and Profiles | Modules</h2>
       <hr>
-    <br>
-    <p>To use <i>hiera_include</i>, we set a Hiera variable to hold the name of the classes we would like to apply to the nodes
-       . By convention, this is called  <i>classes</i>, but it could be anything. We'll also set a variable <i>role</i> that
-        we will use in our new base class. We modify  <i>site.pp</i> to include all the classes defined in the Hiera variable classes
-        . We also set a default value if no values are found; this way we can guarantee that the catalogs will compile and all the
-        nodes receive at least the base class. Edit  <i>/etc/puppetlabs/code/environment/production/manifest/site.pp</i>, as follows:
+
+    <p>We will create an Nginx module, but we will keep it simple so that it just performs the following functions
+        <br>
+        1. Install Nginx
+         <br>
+        2. Configure the service to start
+        <br>
+        3. Start the service.
     </p>
     <br>
-      
         <pre class="explanation"> 
-            node default  {
-                hiera_include {'classes', 'base'}
+         class nginx (
+             Integer $connections = 1024,
+             Integer $processess  =  1,
+             Integer $timeout      = 60,
+           ) {
+              file {'nginx.conf'}:
+                path   => '/etc/nginx/nginx.conf',
+                content => template('nginx/nginx.conf.erb'),
+                mode    => '0644',
+                owner   =>  '0',
+                group   =>   '0',
+                notify  =>   Service['nginx'],
+                require =>   Package['nginx'],
+          }
+          package {'nginx':
+            ensure   =>  installed,
+        }
+          service {'nginx:'
+          require  =>  Package['nginx'],
+          ensure   =>  true,
+          enable   =>  true,
+        
+        }
+        </pre>
+      
+      <br>
+      
+      <p>Now, we need to create the <i>define </i> function for an Nginx server as shown in the following code:
+      </p>
+
+      <pre class="explanation"> 
+          define nginx::server (
+            $server_name,
+            $error_log,
+            $access_log,
+            $root,
+            $listen,
+          ) {
+              include nginx
+               file {"nginx::server::$server_name":
+               path    => "etc/nginx/conf.d/${server_name}.conf",
+               content => template('nginx/server.conf.erb'),
+               mode    =>  '0',
+               group   =>  '0',
+               notify  =>  Service['nginx'],
+               require =>  Package['nginx'],
             }
-        </pre>
-       <br>
-     <p>For the base class, we will just set the <i>motd</i> file, as we've done previously. We'll also set a welcome string in Hiera
-        . In <i>common.yaml</i>, we'll set this to something generic and override the value in a hostname-specific YAML file. Edit the base class in <i>/etc/puppetlabs/code/environments/production/
-        modules/base/manifests/init.pp, </i>as follows:
-    </p>
-    <br>
-    <pre class="explanation"> 
-            class base  {
-                $welcome = hiera ('welcome', 'welcome')
-                file {'/etc/motd':
-                  mode  => '0644',
-                  owner =>  '0',
-                  group =>  '0',
-                  content => inline_template ("<%=  @welcome %>"),
-              }
-            }
-        </pre>
-        <br>
-        <p>This is our base class; it uses an inline template to set up the <i>message of the day</i>file <i>(/etc/motd)</i>.
-           We then need to set the welcome information in  <i>hieradata;</i> edit <i>/etc/puppet/hieradata/common.yaml</i> to include
-           the default welcome message, as shown here: </p>
-          <br>
-           <pre class="explanation"> 
-            - - --
-            welcome: 'welcome to Code-Learn'
-            classes:
-              - 'base'
-            syslogpkg: 'nothing'
-            </pre>
-          <br>
-         <p>Now we can run Puppet on our <i>node1</i> machine. After the successful run, our <i>/etc/motd</i> file has the following content:</p>
-
-        <br>
-         <pre class="explanation"> 
-             Welcome to Example.com
-             Managed Node: client
-             Managed by Puppet  version  4.2.1
-        </pre>
-
-
-
-
+          }
+          </pre>
       <div style="height: 100px"></div>
       <hr>
       <div class="small-print">
