@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!-- Template by Quackit.com -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>How to Write Methods in Ruby</title>
+    <meta name="description" content="In this tutorial, we will talk about Defining Methods , Classes and Objects in Ruby"/>
+    <meta name="keywords" content="Ruby Defining Methods | Ruby Defining Classes | Ruby creating Instances and objects">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta name="google-site-verification" content="JcjHi7qe6nWxxbLnkN--gqmGOFaX-Y_JYmzvD2HXy9o" />
+    <meta name="author" content="Pawan Singh">
+    <!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149423046-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-149423046-1');
+</script>
+
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Logo and responsive toggle -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="coding-tutorial">
+              <span class="glyphicon glyphicon-fire"></span> 
+              Code Learn
+            </a>
+        </div>
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="coding-tutorial">Home</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+      <!-- <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="about-us">
+          <li><a href="#">Engage</a></li>
+          <li><a href="#">Pontificate</a></li>
+          <li><a href="#">Synergize</a></li>
+        </ul> -->
+      <!-- </li> -->
+            </ul>
+
+    <!-- Search -->
+    <!-- <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form> -->
+
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+<!-- Page Content -->
+
+<div class="container">
+<div class="row">
+    <div class="col-lg-12">
+       <div class="start-page">
+        <a href="ruby-loops" class="previous">&laquo; Previous</a>
+        <a href="ruby-methods-classes" class="next">Next &raquo;</a>
+        <div>
+        <!-- <a href="#" class="previous round">&#8249;</a>
+        <a href="#" class="next round">&#8250;</a> -->
+      <h2 class="page-header">Classes, Objects & Methods</h2>
+      <hr>
+
+    <p>In this tutorial, We will create Ruby Classes , Methods and Objects . Method definitions look like this in Ruby:</p>
+    <pre class="explanation"> 
+         def print_sum(arg1, arg2)
+           print arg1  +  arg2
+         end
+        </pre>
+
+      <p>You will need to add <i>parameters</i> to the method definition. Each argument on the method call gets stored in one of the parameters
+          within the method.
+         <br><br>
+         The method body consists of one or more Ruby statements that are executed when the method is called.
+         <br><br>
+         Here are two methods for accelerating and sounding th horn. They are about as simple as Ruby methods can be; each methods body has a
+         pair of statements that print strings.
+        
+        </p>
+      <pre class="explanation"> 
+          def accelerate
+           puts "Stepping on the gas"
+           puts "speeding up"
+          end
+
+          def sound_horn
+           puts "pressing the horn button"
+           puts "Beep beep"
+          end
+        </pre>
+
+        <p>The <i>use_headlights</i> method is only slightly more complex; it takes a single parameters, which is interpolated into one of the output strings
+        </p>
+        <pre class="explanation"> 
+            def use_headlights(brightness)
+             puts "Turning on #{brightness}"
+             puts "watch out for deer"
+            end
+          </pre>
+
+        <h2 class="page-header">calling defined methods in Ruby</h2>
+          <p>You can call method you have defiend just like any other. Lets try out our new vehicle methods
+              <br>
+              <br>
+              Ruby lets you put calls to your methods anywhere -- even within the same source file where you defined them. Since this
+              is such a simple program at this point. we will just stick the method calls right after the method declarations.
+          </p>
+
+          <pre class="explanation"> 
+            def accelerate
+               puts "stepping on the gas"
+               puts "Speeding up"
+            end
+
+            def sound_horn
+               puts "Pressing the horn button"
+               puts "Beep beep!"
+            end
+
+            def use_headlights(brightness)
+               puts "Turning on #(brightness) headlights"
+               puts "Watch out for deer!"
+            end
+
+            sound_horn
+            accelerate
+            use_headlights("high-beam")
+          </pre>
+
+          <p>When we run the above program from the terminal, we will see the result of our method calls</p>
+          <pre class="explanation">
+              Pressing the horn button
+              Beep beep!
+              Stepping on the gas
+              Speeding up
+              Turning on high-beam headlights
+              Watch out for deer!
+           </pre>
+         
+           <h2 class="page-header">How to Create an Class in Ruby</h2>
+           <p>Here's an example of a class we could use : a <i>Dog class.</i>
+            <br><br>
+             We use the <i>class</i> keyword to start a new <i>class</i> definition, followed by the name of our new class.
+
+             <br><br>
+             We mark the end of the class definition with the <i>end</i> keyword
+        
+            </p>
+          <pre class="explanation">
+             class Dog
+                def talk
+                  puts "Bark!"
+                end
+
+             def move(destination)
+                puts "Running to the #(destination)"
+             ends
+           </pre>
+
+         <h2 class="page-header">Creating new instances(objects)</h2>
+           <p>if we call the new method on a class, it will return a new instance of that class. We can then assign that instanc to a variable
+               or do whatever else we need to do with it.
+           </p>
+
+           <pre class="explanation">
+               fido = Dog.new
+               rex  = Dog.new
+              </pre>
+            
+            <p>Once we have one or more instance of the class, we can call their instance methods. We do it in the same way we've
+                callled all other methods on objects so far: we use the dot operator to specify which instance is the method's receiver.
+            </p>
+            <pre class="explanation">
+            fido.talk
+            rex.move("food bowl")
+            </pre>
+      <br>
+    </div>
+  </div>
+</div>
+</div>
+      
+      <div style="height: 100px"></div>
+      <hr>
+      <div class="small-print">
+        <div class="container">
+         <center><p><a href="#">Terms &amp; Conditions</a> | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p></center>
+          <center><p>Copyright &copy; Code-Learn.com 2019 </p></center>
+        </div>
+      </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+<!--- Bootstrap Link------------------------------------------------------------------------------------->
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="js/animation.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- IE10 viewport bug workaround -->
+	<script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	<!-- Placeholder Images -->
+	<script src="js/holder.min.js"></script>
+
+<!--- END ------------------------------------------------------------------------------------------------>
+</body>
+</html>
